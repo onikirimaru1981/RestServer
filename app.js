@@ -1,12 +1,10 @@
-const Server = require("./models/server");// Requerimos modelo donde esta nuestro server configurado
-require('dotenv').config();// requiriendo librerias de 3º
-require('colors')// requiriendo librerias de 3º
+const Server = require("./models/server");
+require('dotenv').config();
+require('colors')
 
+const server = new Server();
 
-const server = new Server();// instanciando clase para luego utilizarla
-
-
-server.listen()// Utilizacion metodo listen
+server.listen()
 
 
 

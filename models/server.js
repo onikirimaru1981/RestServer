@@ -2,6 +2,7 @@
 
 const express = require('express');
 var cors = require('cors');
+const { dbConnection } = require('../database/config');
 
 
 class Server {
@@ -12,9 +13,19 @@ class Server {
         this.usuariosPath = '/api/usuarios';// Con este codigo se ayuda a otra persona que quiera ver el codigo que esta es la ruta de usuarios
 
 
+        // Conectar a base de datos
+        this.conectarDB();// Llamada del metodo conectar db
+
+        //Middlewares
         this.middlewares();
+
+        //Rutas de la aplicacion
         this.routes();
-    }
+    };
+
+    async conectarDB() { // Creacion del metodo conectarDB() dentro de mi clase server
+        await dbConnection();
+    };
 
     middlewares() {
 
@@ -31,7 +42,7 @@ class Server {
     routes() {
 
         // Middleware condicional
-        this.app.use(this.usuariosPath, require('../routes/user.routes'))// Definiendo ruta del metodo
+        this.app.use(this.usuariosPath, require('../routes/usuarios.routes'))// Definiendo ruta del metodo
     }
 
     listen() {// Indicando metodo para configurar puerto del servidor
