@@ -10,7 +10,7 @@ class Server {
     constructor() {
         this.app = express();
         this.port = process.env.PORT
-        this.usuariosPath = '/api/usuarios';// Con este codigo se ayuda a otra persona que quiera ver el codigo que esta es la ruta de usuarios
+        this.usuariosPath = "/api/usuarios";// Con este codigo se ayuda a otra persona que quiera ver el codigo que esta es la ruta de usuarios
 
 
         // Conectar a base de datos
