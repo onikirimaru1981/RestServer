@@ -11,6 +11,7 @@ class Server {
         this.app = express();
         this.port = process.env.PORT
         this.usuariosPath = "/api/usuarios";// Con este codigo se ayuda a otra persona que quiera ver el codigo que esta es la ruta de usuarios
+        this.authPath = "/api/auth";
 
 
         // Conectar a base de datos
@@ -42,6 +43,7 @@ class Server {
     routes() {
 
         // Middleware condicional
+        this.app.use(this.authPath, require('../routes/auth.routes'))// Se recomienda poner el middleware del login primero,y el resto en orden alfabetico
         this.app.use(this.usuariosPath, require('../routes/usuarios.routes'))// Definiendo ruta del metodo
     }
 

@@ -1,14 +1,17 @@
 const { validarCampos } = require('../middlewares/validar-campos')
-const { Router } = require('express');
+const { validarJWT } = require('../middlewares/validar-jwt');
 require('colors');
+const { Router } = require('express');
 const { check } = require('express-validator');
-const { esRoleValido, emailExiste, existeUsuarioPorId, checkEstadoUsuario, } = require('../helpers/db-validators');
+
+const { esRoleValido, emailExiste, existeUsuarioPorId } = require('../helpers/db-validators');
 const {
     usuariosGet,
     usuariosPost,
     usuariosPut,
     usuariosPatch,
     usuariosDelete } = require('../controllers/usuarios.controllers');
+
 
 
 
@@ -19,8 +22,10 @@ const router = Router();
 router.get('/', [
     check('limit', 'No es un numero').not().isNumeric()//hhjhjhj
 ], usuariosGet);
+
+
 router.put('/:id', [
-    check('id', 'No es un ID valido').isMongoId().custom(existeUsuarioPorId),
+    check('id',).custom(existeUsuarioPorId),
     check('nombre', 'El nombre es obligatorio').not().isEmpty(),
     check('correo', 'El correo no es valido').isEmail(),
     check('password', 'El password debe contener como minimo 6 caracteres').isLength({ min: 6 }),
@@ -36,8 +41,13 @@ router.post('/', [
     check('rol').custom(esRoleValido),
     validarCampos
 ], usuariosPost);
+
+
 router.patch('/', usuariosPatch);
+
+
 router.delete('/:id', [
+    validarJWT,// El primer middleware deberia ser el del JWT para si fallara no se ejecutara nada mas
     check('id', 'No es un ID valido').isMongoId().custom(existeUsuarioPorId),
     validarCampos
 ], usuariosDelete);

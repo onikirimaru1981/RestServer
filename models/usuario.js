@@ -19,7 +19,12 @@ const mongoosePaginate = require('mongoose-paginate-v2');
 
 const UsuarioSchema = Schema({// El nombre va siempre en mayusculas
 
+
+
     // Datos del usuario
+
+
+
 
     nombre: {
         type: String,// Definimos de que tipo sera el dato
@@ -63,7 +68,9 @@ UsuarioSchema.plugin(mongoosePaginate);
 
 // Codigo para eliminar datos de la respuesta,y devolver el resto ,sobreescribiendo el metodo toJSON()
 UsuarioSchema.methods.toJSON = function () {// Tener en cuenta que en este caso debe ser una funcion normal
-    const { __v, password, ...usuario } = this.toObject();
+    const { __v, password, _id, correo, ...usuario } = this.toObject();
+    usuario.uid = _id;// Codigo para cambiar visualmente el _id por uid
+    // usuario.email = correo;
     return usuario;
 }
 

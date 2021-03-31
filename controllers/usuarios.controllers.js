@@ -87,15 +87,25 @@ const usuariosPatch = (req, res = response) => {
 const usuariosDelete = async (req, res = response) => {
 
     let { id } = req.params;
+    // const uid = req.uid;// De esta forma extraemos el uid de la request,que anteriormente habiamos introducido en el validar-jwt.js
+
     // Borrado fisico
+
     // const usuario = await Usuario.findByIdAndDelete(id);
+
     //Borrado sin perder dato
-    const usuario = await Usuario.findByIdAndUpdate(id, { estado: false }, { new: true })
+    const usuario = await Usuario.findByIdAndUpdate(id, { estado: false }, { new: true });
+    // usuarioAutenticado = req.usuario// Requiriendo el usuario autenticado de la req,que anteriormente habiamos asignado,este usuario es al que se le asigno el token
+
 
     res.json({
 
-        msg: `usuario con id:${id} ha sido borrado correctamente`,
-        usuario
+        msg: `usuario con uid:${id} ha sido borrado correctamente`,
+        usuario,
+        // usuarioAutenticado
+        // uid
+
+
 
     });
 };
