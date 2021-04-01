@@ -1,6 +1,17 @@
-const { validarCampos } = require('../middlewares/validar-campos')
-const { validarJWT } = require('../middlewares/validar-jwt');
-require('colors');
+// Importando middlewares de forma clasica
+
+// const { validarCampos } = require('../middlewares/validar-campos')
+// const { validarJWT } = require('../middlewares/validar-jwt');
+// const { esAdminRole, tieneRole } = require('../middlewares/validar-roles');
+
+// Importando middlewares de forma mas elegante
+
+const {
+    validarCampos,
+    validarJWT,
+    esAdminRole,
+    tieneRole } = require('../middlewares')
+
 const { Router } = require('express');
 const { check } = require('express-validator');
 
@@ -47,7 +58,10 @@ router.patch('/', usuariosPatch);
 
 
 router.delete('/:id', [
+
     validarJWT,// El primer middleware deberia ser el del JWT para si fallara no se ejecutara nada mas
+    // esAdminRole,// Este middleware fuerza a que el usuario tenga que ser administrador
+    tieneRole('ADMIN_ROLE', 'USER_ROLE'),// Middleware mas flexible para los roles
     check('id', 'No es un ID valido').isMongoId().custom(existeUsuarioPorId),
     validarCampos
 ], usuariosDelete);

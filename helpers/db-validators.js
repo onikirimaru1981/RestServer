@@ -1,7 +1,10 @@
 // Centrando el validador de role
 const Role = require('../models/role');
 const Usuario = require('../models/usuario');
-const mongoose = require('mongoose')
+const mongoose = require('mongoose');
+
+
+
 
 
 const esRoleValido = async (rol = '') => {// En caso de que la peticion viniera vacia en el campo rol,dejariamos por defecto un string vacio
@@ -12,7 +15,7 @@ const esRoleValido = async (rol = '') => {// En caso de que la peticion viniera 
 
     }
 
-};
+}
 
 
 
@@ -25,7 +28,8 @@ const emailExiste = async (correo = '') => {
 
     }
 
-};
+}
+
 
 const existeUsuarioPorId = async (id = '') => {
 
@@ -40,7 +44,10 @@ const existeUsuarioPorId = async (id = '') => {
         throw new Error(`El id ${id} no es válido`);
     }
 
-};
+
+
+
+}
 
 
 
@@ -51,6 +58,7 @@ module.exports = {
     esRoleValido,
     emailExiste,
     existeUsuarioPorId,
+
 
 
 }

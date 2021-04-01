@@ -1,6 +1,7 @@
 const { response, request } = require('express');
 const jwt = require('jsonwebtoken');
-const Usuario = require('../models/usuario')
+const Usuario = require('../models/usuario');
+
 
 
 const validarJWT = async (req = request, res = response, next) => {
@@ -47,7 +48,8 @@ const validarJWT = async (req = request, res = response, next) => {
 
         // Con este codigo creamos una propiedad nueva en el objeto request
         req.uid = uid;
-        req.usuario = usuario// Añadimos a la req el usuario con ese uid del cual se utiliza el token para poder borrar
+        req.usuario = usuario// Añadimos a la req el usuario con ese uid del cual se utiliza el token para poder borrar,
+        //tambien nos beneficia esta sintaxis porque los datos del usuario ya quedas almacenados en la req
 
 
 

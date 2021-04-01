@@ -60,6 +60,7 @@ const usuariosPost = async (req, res = response) => {
 
 const usuariosPut = async (req, res = response) => {
 
+
     const id = req.params.id;
     const { _id, password, google, rol, ...resto } = req.body// Codigo para extraer parametros que podrian causar que nuestro codigo falle 
     //TODO: validar contra BD
@@ -67,6 +68,19 @@ const usuariosPut = async (req, res = response) => {
         const salt = bcryptjs.genSaltSync(10);
         resto.password = bcryptjs.hashSync(password, salt);
     }
+
+    await Usuario.findById(id, (error, user) => {
+        const estadoUser = user.estado
+
+        if (!estadoUser) {
+            res.status(400).json(
+                {
+                    msg: 'El usuario que intenta actualizar no existe en la BD'
+
+                })
+        }
+
+    })
     //Codigo para actualizar con el metodo findByIdAndUpdate
     const usuario = await Usuario.findByIdAndUpdate(id, resto, { new: true })// La opcion new true devuelve ya el dato actualizado
     res.status(202).json({
@@ -86,6 +100,7 @@ const usuariosPatch = (req, res = response) => {
 
 const usuariosDelete = async (req, res = response) => {
 
+
     let { id } = req.params;
     // const uid = req.uid;// De esta forma extraemos el uid de la request,que anteriormente habiamos introducido en el validar-jwt.js
 
@@ -94,6 +109,20 @@ const usuariosDelete = async (req, res = response) => {
     // const usuario = await Usuario.findByIdAndDelete(id);
 
     //Borrado sin perder dato
+    await Usuario.findById(id, (error, user) => {
+        const estadoUser = user.estado
+
+        if (!estadoUser) {
+            res.status(400).json(
+                {
+                    msg: 'El usuario que intenta borrar ya no existe en la BD'
+
+                })
+        }
+
+    })
+
+
     const usuario = await Usuario.findByIdAndUpdate(id, { estado: false }, { new: true });
     // usuarioAutenticado = req.usuario// Requiriendo el usuario autenticado de la req,que anteriormente habiamos asignado,este usuario es al que se le asigno el token
 
