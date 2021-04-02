@@ -5,13 +5,75 @@
     <meta charset="UTF-8">
     <meta http-equiv="X-UA-Compatible" content="IE=edge">
     <meta name="viewport" content="width=device-width, initial-scale=1.0">
-    <title>Acceso denegado</title>
+    <title>Google Signin</title>
+
+    <!-- Meta de google -->
+    <meta name="google-signin-client_id"
+        content="120307489189-sde3sh3kd5jcn5c3u1v7jiqh6fdphrv7.apps.googleusercontent.com">
 </head>
 
 <body>
 
-    <h1>Aceeso Denegado</h1>
+    <h1>Google Signin</h1>
+    <hr>
+    <!-- Boton de Google -->
+    <div class="g-signin2" data-onsuccess="onSignIn"></div>
+    <!-- <Script> De google -->
+    <script src="https://apis.google.com/js/platform.js" async defer></script>
+    <hr>
+    <a href="#" onclick="signOut();">Sign out</a>
 
+    <script>
+        console.log(window.location.hostname.includes('localhost'));
+
+        // Ternario para cuando acceda al servicio desde local o remoto
+
+        var url = (window.location.hostname.includes('localhost')) ?
+            'http://localhost:8080/api/auth/google' :
+            'https://restserver-node-santana.herokuapp.com/api/auth/google';
+
+        // Funcion logear
+        function onSignIn(googleUser) {
+            var profile = googleUser.getBasicProfile();
+            console.log('ID: ' + profile.getId()); // Do not send to your backend! Use an ID token instead.
+            console.log('Name: ' + profile.getName());
+            console.log('Image URL: ' + profile.getImageUrl());
+            console.log('Email: ' + profile.getEmail()); // This is null if the 'email' scope is not present.
+            // IdToken
+            var id_token = googleUser.getAuthResponse().id_token;
+            const data = {
+                id_token
+            };
+            // console.log(id_token);
+
+            // Peticion POST desde frontend
+
+            fetch(url, {
+                    method: 'POST',
+                    headers: {
+                        'Content-Type': 'application/json'
+                    },
+                    body: JSON.stringify(data)
+                })
+                .then(resp => resp.json())
+                .then(data => console.log('Nuestro server', data))
+                .catch(console.log)
+
+            //RESP
+            // Nuestro server {msg: "Todo ok! Google Signin", id_token:
+            // "eyJhbGciOiJSUzI1NiIsImtpZCI6IjEzZThkNDVhNDNjYjIyND…yP95Umy8tC9hovyaZVd7gPFVnGOhM2kMTSWYnCA1q0Fzx2iQg"}
+
+        };
+
+
+        // Funcion de deslogear
+        function signOut() {
+            var auth2 = gapi.auth2.getAuthInstance();
+            auth2.signOut().then(function () {
+                console.log('User signed out.');
+            });
+        };
+    </script>
 </body>
 
 </html>

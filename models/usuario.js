@@ -18,13 +18,7 @@ const mongoosePaginate = require('mongoose-paginate-v2');
 
 
 const UsuarioSchema = Schema({// El nombre va siempre en mayusculas
-
-
-
     // Datos del usuario
-
-
-
 
     nombre: {
         type: String,// Definimos de que tipo sera el dato
@@ -37,7 +31,7 @@ const UsuarioSchema = Schema({// El nombre va siempre en mayusculas
     },
     password: {
         type: String,
-        required: [true, 'El password es obligatorio']
+        required: [this.google === false, 'La contraseña es requerida.']
     },
     img: {
         type: String// La imagen sera una url,por eso es tipo string
@@ -45,6 +39,7 @@ const UsuarioSchema = Schema({// El nombre va siempre en mayusculas
     rol: {
         type: String,
         required: [true, 'El rol es obligatorio'],
+        default: 'USER_ROLE',
         emun: ['ADMIN_ROLE', 'USER_ROLE']// Con el emun controlamos los dos unicos tipos de roles admitidos
 
     },
