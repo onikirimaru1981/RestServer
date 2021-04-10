@@ -61,8 +61,8 @@ router.delete('/:id', [
 
     validarJWT,// El primer middleware deberia ser el del JWT para si fallara no se ejecutara nada mas
     // esAdminRole,// Este middleware fuerza a que el usuario tenga que ser administrador
-    tieneRole('ADMIN_ROLE', 'USER_ROLE'),// Middleware mas flexible para los roles
-    check('id', 'No es un ID valido').isMongoId().custom(existeUsuarioPorId),
+    // tieneRole('ADMIN_ROLE', 'USER_ROLE'),// Middleware mas flexible para los roles
+    // check('id', 'No es un ID valido').isMongoId().custom(existeUsuarioPorId),
     validarCampos
 ], usuariosDelete);
 

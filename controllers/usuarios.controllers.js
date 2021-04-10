@@ -7,33 +7,42 @@ const Usuario = require('../models/usuario');
 
 //lista de usuarios
 const usuariosGet = async (req = request, res = response) => {
-
     // const { q, nombre = 'No name', apikey } = req.query;
-    //Paginacion
-
-    const { limit = 5, page = 1 } = req.query;// Recogiendo query del usuario
+    const { limit, page } = req.query;
     const query = { estado: true };
-    const { offset, hasPrevPage, hasNextPage, prevPage, pagingCounter, ...cuerpoReq } = await Usuario.paginate({}, { limit, page });// Utilizando metodo .paginate() de (mongoosePaginate);
-    // const usuarios = await Usuario.find(query);
-    const { totalDocs: documentosTotales, totalPages: paginasTotales, nextPage: proximaPagina, page: paginaActual } = cuerpoReq;
-    // const UsuariosTotales = await Usuario.countDocuments(query);
+    const opcionesPaginate = {
+        sort: { nombre: "asc" },
+        limit,
+        page
+    };
 
-    const [totalUsuarios, usuarios] = await Promise.all([// Pendiente:implementar la promesa paginate
+
+    //Paginacion
+    // const { limit = 5, page = 1 } = req.query;// Recogiendo query del usuario
+    // const usuarios = await Usuario.find(query).populate('usuarios);
+    const [paginado, usuariosTotales] = await Promise.all([// Pendiente:implementar la promesa paginate
+        Usuario.paginate(query, opcionesPaginate),
         Usuario.countDocuments(query),
-        Usuario.find(query)
-    ])
+
+    ]);
+
+    let { totalPages: paginasTotales, nextPage: proximaPagina, page: paginaActual, docs: usuarios } = paginado
 
     // .skip(Number(desde))// Estableciendo desde donde va a paginar
     // .limit(Number(limite));// Estableciendo limite
+
+
+    if (proximaPagina === null) {
+        proximaPagina = 'No hay mas paginas'
+
+    }
     res.json({
         msg: 'Listado de usuarios',
-        totalUsuarios,
+        usuariosTotales,
         paginasTotales,
         paginaActual,
         proximaPagina,
         usuarios,
-
-
     });
 
 };
@@ -87,6 +96,7 @@ const usuariosPut = async (req, res = response) => {
 
         msg: 'Actualizacion realizada con exito',
         usuario
+
     });
 };
 
@@ -109,28 +119,28 @@ const usuariosDelete = async (req, res = response) => {
     // const usuario = await Usuario.findByIdAndDelete(id);
 
     //Borrado sin perder dato
-    await Usuario.findById(id, (error, user) => {
-        const estadoUser = user.estado
+    // await Usuario.findById(id, (error, user) => {
+    //     const estadoUser = user.estado
 
-        if (!estadoUser) {
-            res.status(400).json(
-                {
-                    msg: 'El usuario que intenta borrar ya no existe en la BD'
+    //     if (!estadoUser) {
+    //         res.status(400).json(
+    //             {
+    //                 msg: 'El usuario que intenta borrar ya no existe en la BD'
 
-                })
-        }
+    //             })
+    //     }
 
-    })
+    // })
 
 
-    const usuario = await Usuario.findByIdAndUpdate(id, { estado: false }, { new: true });
+    const usuarioBorrado = await Usuario.findByIdAndUpdate(id, { estado: false }, { new: true });
     // usuarioAutenticado = req.usuario// Requiriendo el usuario autenticado de la req,que anteriormente habiamos asignado,este usuario es al que se le asigno el token
 
 
     res.json({
 
         msg: `usuario con uid:${id} ha sido borrado correctamente`,
-        usuario,
+        usuarioBorrado,
         // usuarioAutenticado
         // uid
 

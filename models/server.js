@@ -9,9 +9,18 @@ class Server {
 
     constructor() {
         this.app = express();
-        this.port = process.env.PORT
-        this.usuariosPath = "/api/usuarios";// Con este codigo se ayuda a otra persona que quiera ver el codigo que esta es la ruta de usuarios
-        this.authPath = "/api/auth";
+        this.port = process.env.PORT;
+        this.paths = {
+
+            auth: '/api/auth',
+            buscar: '/api/buscar',
+            categorias: '/api/categorias',
+            productos: '/api/productos',
+            usuarios: '/api/usuarios',// Con este codigo se ayuda a otra persona que quiera ver el codigo que esta es la ruta de usuarios
+
+
+        };
+
 
 
         // Conectar a base de datos
@@ -43,8 +52,14 @@ class Server {
     routes() {
 
         // Middleware condicional
-        this.app.use(this.authPath, require('../routes/auth.routes'))// Se recomienda poner el middleware del login primero,y el resto en orden alfabetico
-        this.app.use(this.usuariosPath, require('../routes/usuarios.routes'))// Definiendo ruta del metodo
+        this.app.use(this.paths.auth, require('../routes/auth.routes'))// Se recomienda poner el middleware del login primero,y el resto en orden alfabetico
+        this.app.use(this.paths.buscar, require('../routes/buscar.routes'))// Definiendo ruta del metodo
+        this.app.use(this.paths.categorias, require('../routes/categorias.routes'))// Definiendo ruta del metodo
+        this.app.use(this.paths.productos, require('../routes/productos.routes'))// Definiendo ruta del metodo
+        this.app.use(this.paths.usuarios, require('../routes/usuarios.routes'))// Definiendo ruta del metodo
+
+
+
     }
 
     listen() {// Indicando metodo para configurar puerto del servidor

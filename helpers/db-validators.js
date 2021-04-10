@@ -1,7 +1,7 @@
 // Centrando el validador de role
-const Role = require('../models/role');
-const Usuario = require('../models/usuario');
 const mongoose = require('mongoose');
+const { Categoria, Producto, Usuario, Role } = require('../models');
+
 
 
 
@@ -35,9 +35,9 @@ const existeUsuarioPorId = async (id = '') => {
 
     if (mongoose.Types.ObjectId.isValid(id)) {
 
-        const existeUsuario = await Usuario.findById(id);
+        const { estado } = await Usuario.findById(id);
 
-        if (!existeUsuario) {
+        if (!estado) {
             throw new Error(`El id  ${id}  no existe en la BD`);
         }
     } else {
@@ -51,6 +51,48 @@ const existeUsuarioPorId = async (id = '') => {
 
 
 
+// Crear middleware existeCategoria
+
+const existeCategoriaPorId = async (id = '') => {
+
+    if (mongoose.Types.ObjectId.isValid(id)) {
+
+        const { estado } = await Categoria.findById(id);
+
+        if (!estado) {
+            throw new Error(`El id: ${id} no existe en la BD`);
+        }
+    } else {
+        throw new Error(`El id ${id} no es válido`);
+    }
+
+
+
+
+};
+// Crear middleware existeProducto
+
+const existeProductoPorId = async (id = '') => {
+
+    if (mongoose.Types.ObjectId.isValid(id)) {
+
+        const { estado } = await Producto.findById(id);
+        if (!estado) {
+            throw new Error(`El id: ${id} no existe en la BD`);
+        }
+    } else {
+        throw new Error(`El id ${id} no es válido`);
+    }
+
+
+};
+
+
+
+
+
+
+
 
 
 
@@ -58,6 +100,10 @@ module.exports = {
     esRoleValido,
     emailExiste,
     existeUsuarioPorId,
+    existeCategoriaPorId,
+    existeProductoPorId,
+
+
 
 
 

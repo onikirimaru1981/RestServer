@@ -28,15 +28,24 @@ const login = async (req, res = response) => {
             });
         };
 
-        // Verificar la contraseña
-        const validPassword = bcryptjs.compareSync(password, usuario.password);// Metodo compareSyn es util para comparar el password de nuestra bd con el de la peticion de login
-        if (!validPassword) {
-            return res.status(400).json({
+        // Comprobar si es usuario google
 
-                msg: 'Usuario - Password no son correctos - passsword'
-            })
+        if (usuario.google) {
+            // console.log('todo ok');
+            const token = await generarJWT(usuario.id);
+        } else {
 
+            // Verificar la contraseña
+            const validPassword = bcryptjs.compareSync(password, usuario.password);// Metodo compareSyn es util para comparar el password de nuestra bd con el de la peticion de login
+            if (!validPassword) {
+                return res.status(400).json({
+
+                    msg: 'Usuario - Password no son correctos - passsword'
+                })
+
+            }
         }
+
 
         // Generar el JWT
 
@@ -70,6 +79,10 @@ const googleSignin = async (req, res = response) => {
         // verificar si el correo ya existe en la BD
 
         let usuario = await Usuario.findOne({ correo });
+        //Encriptar contraseña(hacer el hash)
+        // const password = process.env.GOOGLE_PASSWORD
+        // const salt = bcryptjs.genSaltSync(10);
+        // googlePass = bcryptjs.hashSync(password, salt);
 
         if (!usuario) {
             // Si no existe se crea usuario 

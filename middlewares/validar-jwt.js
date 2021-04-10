@@ -51,11 +51,6 @@ const validarJWT = async (req = request, res = response, next) => {
         req.usuario = usuario// Añadimos a la req el usuario con ese uid del cual se utiliza el token para poder borrar,
         //tambien nos beneficia esta sintaxis porque los datos del usuario ya quedas almacenados en la req
 
-
-
-
-
-
         // req.usuario = usuario;// Con este codigo creamos una propiedad nueva en el request
         next()// instruccion para que siga con el siguiente middleware
 
