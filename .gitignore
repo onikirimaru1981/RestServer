@@ -1,3 +1,5 @@
 node_modules/
 .back
 .env
+uploads/usuarios/**.*
+uploads/productos/**.*
